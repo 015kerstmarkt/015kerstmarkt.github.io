@@ -64,6 +64,9 @@ p{margin:0}
 .groot{position:fixed;inset:0;z-index:20;background:rgba(20,8,36,.94);display:grid;place-items:center;text-align:center;padding:24px}
 .groot h2{font-size:clamp(48px,12vw,140px);line-height:.9;color:var(--goud)}
 .groot p{font-size:clamp(20px,3vw,34px)}
+.groot .pov{display:block;max-width:min(90vw,720px);max-height:46vh;margin:18px auto;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.groot p.small{font-size:16px;color:var(--mist)}
+.groot .knoppen{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
 /* fotomuur */
 .muur{position:fixed;inset:0;background:#120720;display:grid;grid-template-columns:1fr minmax(260px,24vw);overflow:hidden}
@@ -97,7 +100,7 @@ p{margin:0}
 <section class="login" id="v-login" hidden>
   <form id="loginform">
     <h1>Beheer 015Kerstmarkt</h1>
-    <p class="small">Voor het team. Met de beheersleutel zie je alle foto's, de fotomuur en de loting.</p>
+    <p class="small">Voor het team. Met de beheersleutel zie je alle foto's, de fotomuur en de hoodieloting.</p>
     <label class="field" for="key">Beheersleutel<input id="key" type="password" autocomplete="current-password" required></label>
     <button class="btn gold" type="submit">Inloggen</button>
     <p class="err" id="loginerr" role="alert"></p>
@@ -113,9 +116,9 @@ p{margin:0}
   </div>
   <div class="cijfers" id="cijfers"></div>
   <div class="vak">
-    <h2>Mutsenloting</h2>
+    <h2>Hoodieloting</h2>
     <div class="loting">
-      <button class="btn gold" type="button" id="trek">Trek een winnaar</button>
+      <button class="btn gold" type="button" id="trek">Trek de hoodie-winnaar</button>
       <div><p class="small" id="lotinfo"></p><div class="winnaars" id="winnaars"></div></div>
     </div>
   </div>
@@ -140,7 +143,7 @@ p{margin:0}
 <section class="poster" id="v-poster" hidden>
   <h1>015Connect<br>Kerstmarkt</h1>
   <div class="qrbig" id="qr-poster"></div>
-  <p>Scan voor de plattegrond, je todo-lijst en deel jouw kerstmarkt-POV</p>
+  <p>Scan voor de plattegrond en de tiener-todo. Maak bij 7 onderdelen een POV en verdien 2 limited-edition 015Kerstkaarten!</p>
   <div class="noprint" style="display:flex;gap:10px">
     <a class="btn gold" href="#beheer">Terug</a>
     <span class="small" style="color:#4d2d6e">Print met Ctrl+P / Cmd+P</span>
@@ -177,10 +180,11 @@ async function laadBeheer() {
   const [o, f] = await Promise.all([api("overzicht"), api("fotos?alles=1")]);
   $("#cijfers").innerHTML = [
     [o.uploads, "POV's"], [o.filmpjes, "waarvan filmpjes"], [o.bezoekers, "telefoons met de app"],
-    [o.metGenoeg, `met ${o.vinkjesNodig}+ vinkjes`], [o.vinkjes, "lampjes aangezet"]
+    [o.metGenoeg, `verdienden de kerstkaarten (${o.vinkjesNodig}+ onderdelen)`], [o.vinkjes, "lampjes aangezet"]
   ].map(([n, l]) => `<div><b>${n}</b><span class="small">${l}</span></div>`).join("");
-  $("#lotinfo").textContent = `${o.metGenoeg} ${o.metGenoeg === 1 ? "tiener heeft" : "tieners hebben"} ${o.vinkjesNodig} of meer vinkjes. Alleen wie een naam invulde doet mee.`;
-  $("#winnaars").innerHTML = o.winnaars.map(w => `<span>${esc(w.naam)} · lot ${esc(w.lot).toUpperCase()}</span>`).join("");
+  loten = lotenVan(f.fotos);
+  $("#lotinfo").textContent = `${loten.length} ${loten.length === 1 ? "foto of filmpje doet" : "foto's en filmpjes doen"} mee${vanaf(f.fotos) ? " (alleen van " + DATUM_TEKST + ")" : ""}. Elke POV is één lot; verborgen POV's tellen niet mee.`;
+  $("#winnaars").innerHTML = getrokken.map(w => `<span>${esc(w.naam || "Anoniem")} · ${tijd(w.t)}</span>`).join("");
   $("#grid").innerHTML = f.fotos.length ? f.fotos.map(x => `
     <div class="kaart${x.verborgen ? " weg" : ""}">
       <div class="beeld">${x.soort === "video"
@@ -197,17 +201,34 @@ document.addEventListener("click", async e => {
   const v = e.target.closest("[data-verberg]");
   if (v) { v.disabled = true; await api("verberg", { method: "POST", body: JSON.stringify({ pad: v.dataset.verberg, verborgen: +v.dataset.v }) }); laadBeheer(); }
 });
-$("#trek").addEventListener("click", async () => {
+/* Hoodieloting: elke foto of film die niet verborgen is, is één lot. Vanaf de kerstmarkt-dag tellen alleen POV's
+   van die dag mee, zodat testfoto's van daarvoor vanzelf buiten de loting vallen. */
+const DATUM = "2026-12-11", DATUM_TEKST = "11 december";
+let loten = [], getrokken = [];
+const vanaf = lijst => lijst.some(x => new Date(x.t) >= new Date(DATUM + "T00:00:00"));
+const lotenVan = lijst => lijst.filter(x => !x.verborgen && (!vanaf(lijst) || new Date(x.t) >= new Date(DATUM + "T00:00:00")));
+async function trek() {
   const g = $("#groot");
   try {
-    const { winnaar } = await api("trek", { method: "POST" });
-    g.innerHTML = `<div><p>De muts gaat naar</p><h2>${esc(winnaar.naam)}</h2><p>lot ${esc(winnaar.lot).toUpperCase()} · ${winnaar.vinkjes} vinkjes</p><br><button class="btn gold" type="button" id="dicht">Sluiten</button></div>`;
+    const f = await api("fotos?alles=1");
+    loten = lotenVan(f.fotos).filter(x => !getrokken.some(w => w.pad === x.pad));
+    if (!loten.length) throw new Error("Er zijn nog geen POV's om uit te loten.");
+    const a = new Uint32Array(1); crypto.getRandomValues(a);
+    const w = loten[a[0] % loten.length]; getrokken.push(w);
+    const beeld = w.soort === "video"
+      ? `<video class="pov" src="${fotoUrl(w.pad)}" autoplay muted loop playsinline></video>`
+      : `<img class="pov" alt="De winnende POV" src="${fotoUrl(w.pad)}">`;
+    g.innerHTML = `<div><p>De 015Connect-hoodie gaat naar</p><h2>${esc(w.naam || "deze POV")}</h2>${beeld}
+      <p class="small">Verstuurd om ${tijd(w.t)}. De winnaar ziet deze foto in de app bij "Verstuurd vanaf dit toestel".</p><br>
+      <div class="knoppen"><button class="btn ghost" type="button" id="opnieuw">Niet aanwezig? Trek opnieuw</button><button class="btn gold" type="button" id="dicht">Sluiten</button></div></div>`;
   } catch (err) {
     g.innerHTML = `<div><p>${esc(err.message)}</p><br><button class="btn gold" type="button" id="dicht">Sluiten</button></div>`;
   }
   g.hidden = false; $("#dicht").focus();
   $("#dicht").onclick = () => { g.hidden = true; laadBeheer(); };
-});
+  const o = $("#opnieuw"); if (o) o.onclick = trek;
+}
+$("#trek").addEventListener("click", trek);
 
 /* ---------- fotomuur ---------- */
 let rij = [], gezien = new Set(), idx = 0, timer = 0, poll = 0;
