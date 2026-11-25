@@ -143,7 +143,7 @@ p{margin:0}
 <section class="poster" id="v-poster" hidden>
   <h1>015Connect<br>Kerstmarkt</h1>
   <div class="qrbig" id="qr-poster"></div>
-  <p>Scan voor de plattegrond en de tiener-todo. Maak bij 7 onderdelen een POV en verdien 2 limited-edition 015Kerstkaarten!</p>
+  <p>Scan voor de plattegrond en de tiener-todo. Maak bij 10 onderdelen een POV en verdien 2 limited-edition 015Kerstkaarten!</p>
   <div class="noprint" style="display:flex;gap:10px">
     <a class="btn gold" href="#beheer">Terug</a>
     <span class="small" style="color:#4d2d6e">Print met Ctrl+P / Cmd+P</span>
@@ -183,7 +183,7 @@ async function laadBeheer() {
     [o.metGenoeg, `verdienden de kerstkaarten (${o.vinkjesNodig}+ onderdelen)`], [o.vinkjes, "lampjes aangezet"]
   ].map(([n, l]) => `<div><b>${n}</b><span class="small">${l}</span></div>`).join("");
   loten = lotenVan(f.fotos);
-  $("#lotinfo").textContent = `${loten.length} ${loten.length === 1 ? "foto of filmpje doet" : "foto's en filmpjes doen"} mee${vanaf(f.fotos) ? " (alleen van " + DATUM_TEKST + ")" : ""}. Elke POV is één lot; verborgen POV's tellen niet mee.`;
+  $("#lotinfo").textContent = `${loten.length} ${loten.length === 1 ? "foto of filmpje doet" : "foto's en filmpjes doen"} mee. Elke POV is één lot; verborgen POV's tellen niet mee.`;
   $("#winnaars").innerHTML = getrokken.map(w => `<span>${esc(w.naam || "Anoniem")} · ${tijd(w.t)}</span>`).join("");
   $("#grid").innerHTML = f.fotos.length ? f.fotos.map(x => `
     <div class="kaart${x.verborgen ? " weg" : ""}">
@@ -201,12 +201,11 @@ document.addEventListener("click", async e => {
   const v = e.target.closest("[data-verberg]");
   if (v) { v.disabled = true; await api("verberg", { method: "POST", body: JSON.stringify({ pad: v.dataset.verberg, verborgen: +v.dataset.v }) }); laadBeheer(); }
 });
-/* Hoodieloting: elke foto of film die niet verborgen is, is één lot. Vanaf de kerstmarkt-dag tellen alleen POV's
-   van die dag mee, zodat testfoto's van daarvoor vanzelf buiten de loting vallen. */
-const DATUM = "2026-12-11", DATUM_TEKST = "11 december";
+/* Hoodieloting: elke foto of film die niet verborgen is, is één lot. Op 11 december om 12:00 wist de server
+   alle testdata; voor de zekerheid tellen POV's van daarvoor hier dan ook niet meer mee. */
+const WISSEN = Date.parse("2026-12-11T12:00:00+01:00");
 let loten = [], getrokken = [];
-const vanaf = lijst => lijst.some(x => new Date(x.t) >= new Date(DATUM + "T00:00:00"));
-const lotenVan = lijst => lijst.filter(x => !x.verborgen && (!vanaf(lijst) || new Date(x.t) >= new Date(DATUM + "T00:00:00")));
+const lotenVan = lijst => lijst.filter(x => !x.verborgen && (Date.now() < WISSEN || x.t >= WISSEN));
 async function trek() {
   const g = $("#groot");
   try {

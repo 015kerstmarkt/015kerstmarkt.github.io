@@ -158,10 +158,25 @@ p{margin:0}
 .hoodie svg{width:40px;height:40px;flex:none}
 
 /* info */
+.menu{display:grid;grid-template-columns:1fr auto;gap:8px 16px;font-variant-numeric:tabular-nums;align-items:baseline}
+.menu span:nth-child(even){font-weight:700;text-align:right;color:var(--goud)}
+.menu small{display:block;color:var(--mist);font-size:13px}
+.prijs{display:inline-block;margin-left:6px;padding:1px 9px;border-radius:99px;background:#2e1a4b;border:1px solid var(--goud);color:var(--goud);font:700 13px/1.5 var(--body);vertical-align:2px;white-space:nowrap}
+.dicht{border:1.5px dashed var(--goud);border-radius:14px;padding:14px 16px;font-weight:600}
 .jaar{border-radius:14px;overflow:hidden;display:block}
 .jaar img{display:block;width:100%;height:auto}
 .sos{border:1.5px solid var(--rood)}
 .sos a{color:var(--ivoor);font:800 28px/1 var(--display);font-stretch:78%;text-decoration:none;font-variant-numeric:tabular-nums}
+
+/* intro: drone-beeld met het logo erover */
+.intro{position:fixed;inset:0;z-index:50;background:#120720;display:grid;place-items:center;cursor:pointer;transition:opacity .7s ease}
+.intro video,.intro .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.intro .poster{background:center/cover no-repeat}
+.intro::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(18,7,32,.05),rgba(18,7,32,.55) 75%)}
+.intro img{position:relative;z-index:1;width:min(78vw,380px);height:auto;filter:drop-shadow(0 18px 40px rgba(0,0,0,.7));animation:logo 1.4s cubic-bezier(.2,.8,.2,1) both .3s}
+.intro p{position:absolute;z-index:1;bottom:max(28px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:var(--ivoor);font-size:14px;opacity:.75}
+.intro.weg{opacity:0;pointer-events:none}
+@keyframes logo{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
 
 /* tabbalk */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(34,17,58,.94);backdrop-filter:blur(10px);border-top:1px solid rgba(185,174,203,.25)}
@@ -173,6 +188,12 @@ p{margin:0}
 </style>
 </head>
 <body>
+<div class="intro" id="intro" hidden aria-hidden="true">
+  <div class="poster" style="background-image:url(assets/intro.jpg)"></div>
+  <video muted playsinline preload="auto" poster="assets/intro.jpg"><source src="assets/intro.mp4" type="video/mp4"></video>
+  <img alt="">
+  <p>Tik om verder te gaan</p>
+</div>
 <div class="app">
   <header class="top">
     <svg viewBox="0 0 809 809" aria-hidden="true"><path d="M377.0,802.3C228.9,793.6 91.6,693.8 35.2,554.0C15.2,504.4 6.8,460.0 6.9,404.0C6.9,347.4 16.6,298.8 37.9,249.0C108.7,83.5 282.2,-14.9 459.5,10.0C639.5,35.3 778.3,177.2 800.7,359.0C803.2,379.3 803.2,432.7 800.7,451.5C788.6,542.1 751.8,619.0 690.5,681.9C607.3,767.2 497.4,809.4 377.0,802.3ZM447.0,783.5C556.2,771.0 653.7,713.4 716.3,624.3C823.0,472.6 805.2,266.2 674.0,135.0C572.6,33.6 422.6,-2.1 285.9,42.6C209.0,67.7 141.6,117.4 94.0,184.1C20.5,286.9 3.3,422.4 48.6,540.7C92.9,656.5 190.2,743.1 310.5,774.0C333.7,779.9 354.1,783.0 385.5,785.4C395.7,786.2 433.9,785.0 447.0,783.5ZM536.0,686.1C497.7,677.6 469.7,646.9 464.9,607.9L463.7,598.5L440.3,582.5C417.9,567.1 403.6,557.4 326.3,504.3C298.0,484.8 258.2,460.0 255.3,460.0C255.0,460.0 251.8,463.2 248.2,467.0C214.5,503.5 156.8,505.6 120.3,471.6C79.2,433.3 82.4,366.7 127.0,333.1C145.0,319.6 161.2,314.6 185.0,315.3C210.4,316.1 229.0,324.0 246.3,341.2L251.1,346.0L264.3,338.4C271.6,334.3 300.4,315.1 328.5,295.9C356.6,276.6 399.0,247.5 422.8,231.2L466.0,201.5L465.3,195.0C459.6,145.7 486.8,105.1 534.0,92.3C544.9,89.4 568.0,89.9 579.3,93.3C661.8,118.5 669.1,229.4 590.4,264.3C568.9,273.8 539.9,273.4 516.7,263.1C511.7,261.0 500.8,254.0 495.5,249.6L492.5,247.1L459.0,263.7C440.6,272.8 413.4,286.2 398.5,293.5C310.0,337.0 290.9,346.6 281.0,352.5C268.1,360.1 247.8,371.0 246.4,371.0C245.9,371.0 244.2,368.7 242.6,366.0C241.0,363.3 236.9,358.3 233.6,354.9C188.8,309.0 111.7,338.1 109.2,401.8C106.5,471.6 192.0,504.6 237.2,451.2C239.9,448.1 243.4,442.7 245.0,439.3L248.0,433.1L255.7,436.8C260.0,438.8 265.1,441.5 267.0,442.9C270.3,445.1 337.0,478.4 435.0,526.7L478.5,548.1L480.0,545.8C496.9,520.5 526.0,506.1 558.4,507.2C636.6,510.0 674.3,602.8 620.4,659.9C599.4,682.2 565.6,692.7 536.0,686.1ZM563.0,621.0L563.0,583.0L578.5,583.0L594.0,583.0L594.0,575.2L594.0,567.5L578.5,567.8L563.0,568.1L563.0,557.0L563.0,546.0L555.6,546.0C546.8,546.0 547.1,545.6 547.2,558.5L547.2,567.5L531.6,567.8L516.0,568.1L516.0,575.5L516.0,583.0L531.5,583.0L547.0,583.0L547.0,620.3C547.0,640.9 547.3,658.0 547.7,658.3C548.0,658.7 551.6,659.0 555.7,659.0L563.0,659.0L563.0,621.0ZM279.0,431.1C270.4,428.3 263.1,422.1 258.9,414.0C255.5,407.5 255.5,393.6 258.9,386.8C268.1,368.2 291.6,363.1 307.9,376.1C315.9,382.3 319.4,390.5 318.8,401.7C318.2,414.3 312.5,423.1 301.5,428.8C296.2,431.5 284.0,432.8 279.0,431.1ZM324.0,400.5L324.0,369.0L331.9,369.0L339.9,369.0L349.7,386.8L359.5,404.5L359.8,386.8L360.0,369.0L367.5,369.0L375.0,369.0L375.0,400.5L375.0,432.0L367.0,432.0C359.8,432.0 358.9,431.8 357.7,429.8C356.9,428.5 352.3,420.3 347.4,411.5L338.5,395.6L338.2,413.8L338.0,432.0L331.0,432.0L324.0,432.0L324.0,400.5ZM383.0,400.5L383.0,368.9L391.2,369.2L399.5,369.5L409.5,387.5L419.5,405.5L419.8,387.2L420.0,369.0L427.0,369.0L434.0,369.0L434.0,400.5L434.0,432.0L426.1,432.0L418.2,432.0L408.3,414.3L398.5,396.7L398.2,414.3L398.0,432.0L390.5,432.0L383.0,432.0L383.0,400.5ZM441.0,400.5L441.0,369.0L461.5,369.0L482.0,369.0L482.0,376.0L482.0,383.0L469.0,383.0L456.0,383.0L456.0,388.0L456.0,393.0L466.5,393.0L477.0,393.0L477.0,400.5L477.0,408.0L466.5,408.0L456.0,408.0L456.0,413.0L456.0,418.0L469.0,418.0L482.0,418.0L482.0,425.0L482.0,432.0L461.5,432.0L441.0,432.0L441.0,400.5ZM506.3,430.1C495.4,426.4 487.0,415.6 485.5,403.5C483.8,390.1 493.3,374.8 506.0,370.4C516.7,366.8 531.6,369.4 537.4,375.9L539.4,378.1L534.6,382.9L529.8,387.8L525.2,385.4C509.3,376.9 493.1,395.1 503.3,410.0C508.0,416.9 518.4,419.1 526.1,414.8L530.0,412.6L534.5,417.5C540.0,423.5 539.9,423.3 535.1,426.6C526.8,432.0 515.8,433.4 506.3,430.1ZM553.5,407.8L553.5,383.5L547.2,383.2L540.9,382.9L541.2,375.7L541.5,368.5L560.7,368.2L579.8,368.0L580.2,374.5C580.6,383.2 580.7,383.0 573.9,383.0L568.0,383.0L568.0,407.5L568.0,432.0L560.8,432.0L553.5,432.0L553.5,407.8ZM295.7,415.3C302.2,412.2 306.0,403.5 304.0,396.1C298.8,376.6 271.0,380.5 271.0,400.8C271.0,413.0 284.2,420.8 295.7,415.3ZM577.0,179.9L577.0,152.0L570.2,152.1L563.5,152.1L556.8,160.5L550.1,168.9L554.9,172.9L559.7,176.9L561.8,174.7L564.0,172.6L564.0,190.2L564.0,207.9L569.8,208.2C572.9,208.4 575.8,208.4 576.2,208.2C576.7,208.0 577.0,195.3 577.0,179.9ZM615.7,203.8C628.3,192.1 621.3,172.8 604.0,171.3C600.7,171.0 598.0,170.2 597.9,169.6C597.9,169.0 597.7,167.7 597.5,166.8C597.2,165.2 598.3,165.0 608.6,165.0L620.0,165.0L620.0,158.5L620.0,152.0L602.5,152.0L585.0,152.0L585.0,168.0L585.0,184.0L595.1,184.0C607.0,184.0 609.0,184.8 609.0,189.5C609.0,196.0 599.9,198.1 598.3,192.0C597.8,190.3 596.9,190.0 591.3,190.0L584.7,190.0L585.3,193.6C587.5,206.8 605.9,213.0 615.7,203.8ZM530.6,205.2C550.4,195.0 550.8,166.7 531.3,155.8C505.1,141.1 477.3,173.6 495.6,197.5C503.1,207.3 519.5,210.9 530.6,205.2ZM513.3,194.9C506.0,192.8 501.2,184.3 503.0,176.7C506.1,163.0 525.5,160.9 531.5,173.6C537.0,185.2 525.6,198.5 513.3,194.9Z" fill="#f3f0e2" fill-rule="evenodd"/></svg>
@@ -237,6 +258,11 @@ p{margin:0}
     <section class="view" id="v-pov" aria-labelledby="h-pov">
       <h2 id="h-pov">Mijn kerstmarkt-POV</h2>
       <p class="lead">Bij de ingang staat natuurlijk weer onze photobooth! Maar met deze app heb jij altijd een POV-kerstcamera bij je.</p>
+      <div class="panel line hoodie">
+        <svg viewBox="0 0 48 48" fill="none" stroke="#f5c451" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M17 8c2 3 4 4 7 4s5-1 7-4l9 5 5 12-6 2-2-5v19H11V22l-2 5-6-2 5-12z"/><path d="M19 9c0 5 2 9 5 9s5-4 5-9M20 34h8"/></svg>
+        <p class="small" id="hoodietekst"></p>
+      </div>
+      <p class="dicht" id="dicht" hidden></p>
       <span class="small" id="demo" hidden>Voorbeeldmodus: versturen staat nog uit, je foto blijft op dit toestel</span>
       <label class="field" for="plek">Bij welk onderdeel ben je?
         <select id="plek"></select>
@@ -266,10 +292,6 @@ p{margin:0}
       </div>
       <p class="msg" id="povmsg" role="status"></p>
       <p class="small" id="consent"></p>
-      <div class="panel line hoodie">
-        <svg viewBox="0 0 48 48" fill="none" stroke="#f5c451" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M17 8c2 3 4 4 7 4s5-1 7-4l9 5 5 12-6 2-2-5v19H11V22l-2 5-6-2 5-12z"/><path d="M19 9c0 5 2 9 5 9s5-4 5-9M20 34h8"/></svg>
-        <p class="small" id="hoodietekst"></p>
-      </div>
       <div class="stack">
         <h3>Verstuurd vanaf dit toestel</h3>
         <div class="grid" id="mine"></div>
@@ -281,6 +303,7 @@ p{margin:0}
     <section class="view" id="v-info" aria-labelledby="h-info">
       <h2 id="h-info">Goed om te weten</h2>
       <div class="panel line" id="programma"></div>
+      <div class="panel" id="eten"></div>
       <div class="panel" id="socials"></div>
       <div class="panel" id="alpha"></div>
       <div class="panel line" id="jaarplanning"></div>
@@ -310,39 +333,45 @@ const CONFIG = {
   datum: "Vrijdag 11 december",
   plaats: "Kruithuis Delft, Schieweg 1",
   noodnummer: "0620258279",
-  nodig: 7,                                   // POV's bij zoveel verschillende onderdelen = kerstkaarten
+  nodig: 10,                                  // POV's bij zoveel verschillende onderdelen = kerstkaarten
+  ophalen: 5,                                 // nummer op de kaart waar je de kaarten ophaalt
+  ophalenBij: "de Alpha-zone",
   beloning: "2 limited-edition 015Kerstkaarten",
   hoodie: "een 015Connect-hoodie",
 
   // Adres van de uploadserver (Cloudflare Worker). Leeg = voorbeeldmodus, er wordt niets verstuurd.
   server: "https://kerstmarkt-015.a-marks.workers.dev",
   maxFilmMB: 32,
+  // Op de dag zelf: om 12:00 gaat alle testdata weg (ook op de telefoons van testers), vanaf 18:00 kan iedereen weer POV's sturen.
+  wissen: "2026-12-11T12:00:00+01:00",
+  open:   "2026-12-11T18:00:00+01:00",
   toestemming: "Let op: foto's en filmpjes kunnen worden gedeeld als sfeerbeelden op onze socials. Wil je jouw beelden privé houden? App dan naar 06 2025 8279.",
 
   // Tiener todo = de onderdelen op de plattegrond. x/y zijn procenten van de kaart (links-boven = 0,0).
   // Tip: open de app met #pinnen achter het adres en tik op de kaart om x/y af te lezen.
   // foto = sfeerbeeld van vorig jaar (map assets/), mag leeg blijven.
   onderdelen: [
-    { nr: 1,  titel: "Photobooth / POV", tekst: "Bij de ingang staat natuurlijk weer onze photobooth! Maar met deze app heb jij altijd een POV-kerstcamera bij je. Verzamel foto's en filmpjes en verdien jouw limited-edition 015Kerstkaarten!", x: 79.7, y: 26.1 },
+    { nr: 1,  titel: "Welkom", tekst: "Bij de ingang staat natuurlijk weer onze photobooth! Maar met deze app heb jij altijd een POV-kerstcamera bij je. Verzamel foto's en filmpjes en verdien jouw limited-edition 015Kerstkaarten!", x: 79.7, y: 26.1 },
     { nr: 2,  titel: "Ready, aim, fire!", tekst: "NIEUW op de kerstmarkt! Schiet met de Kerstkatapult op lichtgevende ballen en scoor zoveel mogelijk punten.", x: 70.3, y: 37.1 },
-    { nr: 3,  titel: "W or L!", tekst: "Pas op je beentjes! Geef geen goals weg, maar ga de strijd aan in de pannakooi!", x: 77.2, y: 53.7, foto: "pannakooi" },
+    { nr: 3,  titel: "Pannakooi", tekst: "Pas op je beentjes! Geef geen goals weg, maar ga de strijd aan in de pannakooi!", x: 77.2, y: 53.7, foto: "pannakooi" },
     { nr: 4,  titel: "Laat van je horen!", tekst: "Spreek jouw persoonlijke kerstwens in bij de 015Connect-telefoon!", x: 55.8, y: 42.8 },
     { nr: 5,  titel: "Nieuwsgierig?", tekst: "Ontdek en bespreek levensvragen bij de Alpha-zone.", x: 55.8, y: 50.0 },
     { nr: 6,  titel: "Creatief aan de slag!", tekst: "Ook dit jaar kun je weer naar hartenlust creatief aan de slag! Knutsel kaarten, kransen en nog veel meer aan de Creakade.", x: 43.9, y: 49.1, foto: "kransen" },
     { nr: 7,  titel: "Deel wat liefde!", tekst: "Schrijf een kaartje tegen eenzaamheid! Je kunt ook eerst zelf een kaartje maken en het daarna meteen versturen.", x: 27.6, y: 50.8, foto: "kaartjes" },
-    { nr: 8,  titel: "Wie wint de race?", tekst: "Vanwege succes herhaald! Daag iemand uit voor een spannende kanorace!", x: 41.5, y: 39.5 },
-    { nr: 9,  titel: "Marshmallow time!", tekst: "Deze mag natuurlijk niet ontbreken! Rooster je eigen marshmallow boven het vuur. Dit jaar met een apart vuur, nieuwe spelregels én extra lekkere marshmallows met koekjes!", x: 10.3, y: 53.8 },
-    { nr: 10, titel: "Happie bij het kampvuur!", tekst: "Heb je nog wat kleingeld op zak? Voor een klein bedrag of via een Tikkie scoor je een heerlijke bockworst.", x: 9.5, y: 61.8 },
+    { nr: 8,  titel: "Wie wint de race?", tekst: "Vanwege succes herhaald! Daag iemand uit voor een spannende kanorace! Meedoen is op eigen risico.", x: 41.5, y: 39.5 },
+    { nr: 9,  titel: "Marshmallow time!", tekst: "Deze mag natuurlijk niet ontbreken! Rooster je eigen marshmallow boven het vuur. Dit jaar met een apart vuur, nieuwe spelregels én extra lekkere marshmallows met koekjes!", prijs: "€ 1,50", x: 10.3, y: 53.8 },
+    { nr: 10, titel: "Happie bij het kampvuur!", tekst: "Heb je nog wat kleingeld op zak? Voor € 1,50 (contant of via een Tikkie) scoor je een heerlijke bockworst.", prijs: "€ 1,50", x: 9.5, y: 61.8 },
     { nr: 11, titel: "Warm op met chocomelk!", tekst: "Scoor jouw gratis chocomelk met slagroom én een koekje bij Koek & Zopie.", x: 12.0, y: 68.1, foto: "chocomelk" },
     { nr: 12, titel: "Do I know you!?", tekst: "Ons doel? Tieners met elkaar verbinden! Herken je iemand van school, maar kennen jullie elkaar nog niet echt? Stel je voor en maak samen een selfie voor de POV!", x: 22.3, y: 90.2, foto: "connect" },
     { nr: 13, titel: "Christmas Dance!", tekst: "Een vaste hit op onze kerstmarkt: de Silent Night Disco! Waar het zeker niet stil blijft...", x: 31.8, y: 64.4, foto: "disco" },
-    { nr: 14, titel: "Let it sing!", tekst: "Kies jouw favoriete nummer bij de Kerstkaraoke en zing lekker mee!", x: 42.5, y: 61.0 }
+    { nr: 14, titel: "Christmas Karaoke!", tekst: "Kies jouw favoriete nummer bij de Kerstkaraoke en zing lekker mee! De hele avond wisselen karaoke en battles elkaar af. Om 19:30 is er een Kerstquiz!", x: 42.5, y: 61.0 }
   ],
   // Plekken op de kaart die geen onderdeel zijn.
   plekken: [ { nr: 15, titel: "WC's", tekst: "", x: 47.7, y: 66.0, wc: true } ],
 
   programma: [
-    { tijd: "20:00", wat: "Kerstboodschap vanaf de Toren" },
+    { tijd: "19:30", wat: "Kerstquiz", waar: "Bij de Christmas Karaoke", plek: 14 },
+    { tijd: "20:00", wat: "Kerstboodschap vanaf de Toren", waar: "Boven de ingang. Alle andere onderdelen liggen dan even stil.", plek: 1 },
     { tijd: "21:00", wat: "Kerstliedjes zingen bij het kampvuur", plek: 12 }
   ],
 
@@ -356,6 +385,12 @@ const CONFIG = {
     { foto: "connect", tekst: "015Connect", plek: 12 },
     { foto: "knutsel", tekst: "Kaarten knutselen", plek: 6 },
     { foto: "rij", tekst: "Lichtjes en lekker eten" }
+  ],
+
+  eten: [
+    ["Chocomelk met slagroom en een koekje", "gratis", 11],
+    ["Marshmallow met koekjes", "€ 1,50", 9],
+    ["Bockworst (contant of Tikkie)", "€ 1,50", 10]
   ],
 
   socials: [
@@ -392,9 +427,14 @@ const ALLE = [...OD, ...CONFIG.plekken];
 const plek = n => ALLE.find(l => l.nr === +n);
 const foto = naam => naam ? `assets/${naam}.webp` : "";
 
-let state = { id: "", done: {}, naam: "", uploads: [], sel: 1, plek: 0, opgehaald: false };
+const WIS = Date.parse(CONFIG.wissen), OPEN = Date.parse(CONFIG.open);
+const povDicht = () => { const nu = Date.now(); return nu >= WIS && nu < OPEN; };
+let state = { id: "", done: {}, naam: "", uploads: [], sel: 1, plek: 0, opgehaald: false, t0: 0 };
 function load() {
   try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+  if (!state.t0) state.t0 = Date.now();
+  // Telefoons van testers: alles van voor het wismoment gaat weg, met een nieuw lotnummer.
+  if (Date.now() >= WIS && state.t0 < WIS) state = { id: "", done: {}, naam: state.naam || "", uploads: [], sel: 1, plek: 0, opgehaald: false, t0: Date.now() };
   if (!/^[a-z0-9]{8,32}$/.test(state.id || "")) {
     const a = new Uint8Array(12); crypto.getRandomValues(a);
     state.id = [...a].map(b => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join(""); save();
@@ -450,7 +490,7 @@ function renderTodos() {
     const d = isDone(o.nr);
     return `<article class="od${d ? " done" : ""}" data-od="${o.nr}">
       <span class="num${d ? " done" : ""}" aria-hidden="true">${d ? CHECK : o.nr}</span>
-      <div><b>${esc(o.titel)}</b><p>${esc(o.tekst)}</p>
+      <div><b>${esc(o.titel)}${o.prijs ? ` <span class="prijs">${esc(o.prijs)}</span>` : ""}</b><p>${esc(o.tekst)}</p>
         <div class="acties">
           ${d ? `<span class="ok">POV verstuurd</span><a class="text-btn" href="#pov-${o.nr}">Nog een POV</a>`
               : `<a class="btn gold klein" href="#pov-${o.nr}">Maak hier je POV</a>`}
@@ -469,9 +509,11 @@ function renderReward() {
       <p>Maak bij minstens ${need} onderdelen een POV-foto of -filmpje en verdien ${esc(CONFIG.beloning)}! Van alle foto's en filmpjes verloten we ook ${esc(CONFIG.hoodie)}!</p>
       <p class="small">Nog ${need - n} ${need - n === 1 ? "onderdeel" : "onderdelen"} te gaan.</p>`;
   } else if (!state.opgehaald) {
+    const op = plek(CONFIG.ophalen);
     el.innerHTML = `<h3>Je hebt ze verdiend!</h3>
-      <p>Laat dit scherm zien aan iemand van het 015Connect-team en haal je ${esc(CONFIG.beloning)} op.</p>
+      <p>${op ? `Ga naar ${esc(CONFIG.ophalenBij || op.titel)} (nr. ${op.nr} op de kaart), laat dit scherm zien` : "Laat dit scherm zien aan iemand van het 015Connect-team"} en haal je ${esc(CONFIG.beloning)} op.</p>
       <p class="lot">${state.naam ? esc(state.naam) + " · " : ""}${n} van ${TOTAAL} · ${lot()}</p>
+      ${op ? `<a class="btn gold klein" href="#kaart" data-goto="${op.nr}">Laat nr. ${op.nr} zien op de kaart</a>` : ""}
       <button class="btn ghost klein" type="button" id="opgehaald">Team: kaarten meegegeven</button>`;
   } else {
     el.innerHTML = `<h3>Kaarten opgehaald</h3>
@@ -507,7 +549,7 @@ function renderPlace() {
   const isOd = OD.includes(l), d = isDone(l.nr);
   $("#place").innerHTML = `<div class="place">
     <span class="num${d ? " done" : ""}">${l.nr}</span>
-    <div><h3>${esc(l.titel)}</h3>${l.tekst ? `<p class="small">${esc(l.tekst)}</p>` : ""}</div>
+    <div><h3>${esc(l.titel)}${l.prijs ? ` <span class="prijs">${esc(l.prijs)}</span>` : ""}</h3>${l.tekst ? `<p class="small">${esc(l.tekst)}</p>` : ""}</div>
     ${l.foto ? `<div class="foto"><img src="${foto(l.foto)}" alt="" loading="lazy"><span>Vorig jaar</span></div>` : ""}
     ${isOd ? `<div class="acties">${d ? `<p class="ok">Je POV van hier is verstuurd. Lampje aan!</p><a class="btn ghost" href="#pov-${l.nr}">Nog een POV maken</a>`
                                       : `<a class="btn gold" href="#pov-${l.nr}">Maak hier je POV</a>`}</div>` : ""}
@@ -614,6 +656,7 @@ function send(blob, kind, name, onProgress) {
 }
 async function submit() {
   if (!staged) return;
+  if (povDicht()) { clearStage(); updateDicht(); return; }
   const nr = +$("#plek").value;
   $("#send").disabled = true; $("#again").disabled = true; $("#bar").hidden = false; say("Bezig met versturen…");
   const prog = p => $("#bar i").style.width = Math.round(p * 100) + "%";
@@ -649,7 +692,7 @@ function renderMine() {
 /* ---------- start en info ---------- */
 function progHTML(knop) {
   return `<h3>Vanavond</h3><div class="prog">` + CONFIG.programma.map(p => `<p class="when">${esc(p.tijd)}</p>
-    <div><h3>${esc(p.wat)}</h3>${p.plek && knop ? `<a class="text-btn" href="#kaart" data-goto="${p.plek}">Laat zien op de kaart (nr. ${p.plek})</a>` : ""}</div>`).join("") + `</div>`;
+    <div><h3>${esc(p.wat)}</h3>${p.waar ? `<p class="small">${esc(p.waar)}</p>` : ""}${p.plek && knop ? `<a class="text-btn" href="#kaart" data-goto="${p.plek}">Laat zien op de kaart (nr. ${p.plek})</a>` : ""}</div>`).join("") + `</div>`;
 }
 function renderInfo() {
   $("#editie").textContent = CONFIG.editie;
@@ -659,6 +702,8 @@ function renderInfo() {
   $("#strip").innerHTML = CONFIG.sfeer.map(s => `<figure>${s.plek ? `<button type="button" data-goto="${s.plek}" data-kaart aria-label="${esc(s.tekst)}, nr. ${s.plek} op de kaart">` : ""}
     <img src="${foto(s.foto)}" alt="${esc(s.tekst)}" loading="lazy" width="1000" height="667">
     <figcaption>${s.plek ? `<i>${s.plek}</i>` : ""}${esc(s.tekst)}</figcaption>${s.plek ? "</button>" : ""}</figure>`).join("");
+  $("#eten").innerHTML = `<h3>Eten &amp; drinken</h3><div class="menu">` + CONFIG.eten.map(([a, b, n]) =>
+    `<span>${esc(a)}<small>nr. ${n} op de kaart</small></span><span>${esc(b)}</span>`).join("") + `</div>`;
   $("#socials").innerHTML = `<h3>Volg ons</h3><p class="small">Voor sfeerbeelden, aankondigingen van activiteiten en meer content.</p>
     <div class="row3">${CONFIG.socials.map(([a, b]) => `<a class="btn" target="_blank" rel="noopener" href="${esc(b)}">${esc(a)}</a>`).join("")}</div>
     <a class="btn ghost" target="_blank" rel="noopener" href="${esc(CONFIG.linktree)}">Alle info op een rij</a>`;
@@ -672,8 +717,14 @@ function renderInfo() {
   $("#ouders").innerHTML = `<h3>Bericht voor ouders</h3><p class="small">${esc(o.tekst)}</p><div class="stack">${o.links.map(([a, b]) => `<a class="btn ghost" target="_blank" rel="noopener" href="${esc(b)}">${esc(a)}</a>`).join("")}</div>`;
   $$("[data-tel]").forEach(a => { a.href = "tel:" + CONFIG.noodnummer; a.textContent = nood(CONFIG.noodnummer); });
   $("#consent").textContent = CONFIG.toestemming;
-  $("#hoodietekst").textContent = `Elke foto en elk filmpje dat je verstuurt is een lot voor ${CONFIG.hoodie}. Wordt jouw POV getrokken? Laat dan hieronder zien dat hij van jou is.`;
+  $("#hoodietekst").textContent = `Elke foto en elk filmpje dat je verstuurt is een lot voor ${CONFIG.hoodie}. Wordt jouw POV getrokken? Laat dan onderaan deze pagina zien dat hij van jou is.`;
   $("#demo").hidden = live();
+  updateDicht();
+}
+function updateDicht() {
+  const d = povDicht();
+  $("#dicht").hidden = !d; $("#pick").hidden = d || !!staged;
+  if (d) $("#dicht").textContent = `De POV-camera gaat vanavond om ${new Date(OPEN).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })} open. Tot straks!`;
 }
 
 /* ---------- navigatie ---------- */
@@ -686,12 +737,30 @@ function route() {
   if (m) { h = "pov"; state.plek = +m[1]; save(); renderPlekSelect(); }
   $("#wis").hidden = h !== "wis"; if (h === "wis") h = "todo";
   if (!TABS.includes(h)) h = "start";
+  if (h === "pov") updateDicht();
   $$(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + h));
   $$(".tabs a").forEach(a => a.dataset.tab === h ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
   window.scrollTo(0, 0);
 }
 
+/* ---------- intro: kort drone-fragment met het logo, één keer per bezoek ---------- */
+function intro() {
+  const el = $("#intro"), v = $("#intro video");
+  let gezien = false; try { gezien = sessionStorage.getItem("015intro") === "1"; } catch (e) {}
+  if (gezien || matchMedia("(prefers-reduced-motion: reduce)").matches || location.hash.length > 1 && location.hash !== "#start") return;
+  try { sessionStorage.setItem("015intro", "1"); } catch (e) {}
+  $("#intro img").src = $(".hero img").src;
+  el.hidden = false;
+  let klaar = false;
+  const sluit = () => { if (klaar) return; klaar = true; el.classList.add("weg"); setTimeout(() => { el.hidden = true; v.pause(); v.removeAttribute("src"); v.load(); }, 750); };
+  el.addEventListener("click", sluit);
+  v.addEventListener("ended", sluit);
+  v.play().catch(() => {});        // lukt afspelen niet, dan blijft de stilstaande drone-foto staan
+  setTimeout(sluit, 6500);         // nooit langer dan zo
+}
+
 function start() {
+  intro();
   load();
   renderInfo(); renderMap(); renderTodos(); renderMine(); renderPlekSelect(); drawSlinger(-1, false); sync();
   $("#naam").value = state.naam || "";
