@@ -1,6 +1,6 @@
 # 015Kerstmarkt app
 
-Mini-app voor de 015Connect Kerstmarkt: plattegrond, de tiener-todo en "Mijn kerstmarkt-POV" (foto's en filmpjes).
+Mini-app voor de 015Connect Kerstmarkt, te vinden op https://015kerstmarkt.github.io/: plattegrond, de tiener-todo en "Mijn kerstmarkt-POV" (foto's en filmpjes).
 
 Verzamel & verdien: wie bij 10 verschillende onderdelen een POV verstuurt, verdient 2 limited-edition 015Kerstkaarten (ophalen bij nr. 5, de Alpha-zone). Elke foto of film is daarnaast één lot voor de 015Connect-hoodie.
 
